@@ -4,36 +4,43 @@ import torch.nn as nn
 class MaskCNN(nn.Module):
     def __init__(self):
         super(MaskCNN, self).__init__()
-        self.layer1 = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
+
+        # Convolutional Block 1
+        self.convBlock1 = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
-            nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2)
+            nn.MaxPool2d(kernel_size=2, stride=2)
         )
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
+
+        # Convolutional Block 2
+        self.convBlock2 = nn.Sequential(
+            nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
-            nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2)
+            nn.MaxPool2d(kernel_size=2, stride=2)
         )
+
+        # Fully connected layers
         self.fc = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(32 * 32 * 32, 128),
+            nn.Linear(256 * 32 * 32, 128),  # adjust if your input image size differs
             nn.ReLU(),
-            nn.Linear(128, 1)
+            nn.Linear(128, 1)  # binary classification
         )
 
     def forward(self, x):
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.fc(x)
+        x = self.convBlock1(x)
+        x = self.convBlock2(x)
+        x = self.fc(x)  # raw logits
         return x
 
 
-def load_model(path="mask_model.pth", device="cpu"):
+def load_model(model_path, device="cpu"):
     model = MaskCNN().to(device)
-    model.load_state_dict(torch.load(path, map_location=device))
+    checkpoint = torch.load(model_path, map_location=device)
+    model.load_state_dict(checkpoint)  # must match training definition
     model.eval()
     return model
