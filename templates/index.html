@@ -4,29 +4,107 @@
 <meta charset="UTF-8">
 <title>Mask Detection</title>
 <style>
-body { text-align: center; font-family: Arial, sans-serif; margin-top:50px; }
-input { margin:20px; }
-.result { font-size: 22px; margin-top: 20px; }
-img { margin-top: 20px; max-width: 300px; border-radius: 10px; }
+body {
+  margin: 0;
+  padding: 0;
+  background: #f4f6f9;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+.container {
+  background: #fff;
+  max-width: 500px;
+  margin: 60px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+h1 {
+  margin-bottom: 25px;
+  color: #2c3e50;
+  font-size: 28px;
+}
+input[type="file"] {
+  margin: 20px 0;
+  padding: 8px;
+  font-size: 15px;
+}
+input[type="submit"] {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+input[type="submit"]:hover {
+  background: #2980b9;
+}
+.result {
+  font-size: 20px;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  display: inline-block;
+}
+.result.mask {
+  background: #eafaf1;
+  color: #27ae60;
+}
+.result.no-mask {
+  background: #fdecea;
+  color: #c0392b;
+}
+.result p {
+  margin: 8px 0;
+}
+img {
+  margin-top: 20px;
+  max-width: 280px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
 </style>
 </head>
 <body>
-<h1>Mask Detection</h1>
-<form method="POST" enctype="multipart/form-data">
-<input type="file" name="file" accept="image/*" required>
-<br>
-<input type="submit" value="Upload & Predict">
-</form>
-
-{% if uploaded_img %}
-<img src="{{ uploaded_img }}" alt="Uploaded Image">
-{% endif %}
-
-{% if prediction %}
-<div class="result">
-<p><b>Prediction:</b> {{ prediction }}</p>
-<p><b>Confidence:</b> {{ confidence|round(2) }}%</p>
+<div class="container">
+  <h1>Mask Detection</h1>
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*" required>
+    <br>
+    <input type="submit" value="Upload & Predict">
+  </form>
+  <img id="uploaded-img" src="" alt="" style="display:none;">
+  <div id="result" class="result" style="display:none;">
+    <p><b>Prediction:</b> <span id="prediction-text"></span></p>
+    <p><b>Confidence:</b> <span id="confidence-text"></span></p>
+  </div>
 </div>
-{% endif %}
+<script>
+function showResult(prediction, confidence, imgSrc) {
+  const img = document.getElementById("uploaded-img");
+  const resultBox = document.getElementById("result");
+  const predictionText = document.getElementById("prediction-text");
+  const confidenceText = document.getElementById("confidence-text");
+
+  if (imgSrc) {
+    img.src = imgSrc;
+    img.style.display = "block";
+  }
+
+  predictionText.textContent = prediction;
+  confidenceText.textContent = confidence;
+
+  if (prediction.toLowerCase() === "mask") {
+    resultBox.className = "result mask";
+  } else {
+    resultBox.className = "result no-mask";
+  }
+
+  resultBox.style.display = "inline-block";
+}
+</script>
 </body>
 </html>
