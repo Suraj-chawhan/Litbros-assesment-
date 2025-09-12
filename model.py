@@ -26,21 +26,21 @@ class MaskCNN(nn.Module):
         # Fully connected layers
         self.fc = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(256 * 32 * 32, 128),  # adjust if your input image size differs
+            nn.Linear(256 * 32 * 32, 128),  
             nn.ReLU(),
-            nn.Linear(128, 1)  # binary classification
+            nn.Linear(128, 1) 
         )
 
     def forward(self, x):
         x = self.convBlock1(x)
         x = self.convBlock2(x)
-        x = self.fc(x)  # raw logits
+        x = self.fc(x) 
         return x
 
-
+ # load model method
 def load_model(model_path, device="cpu"):
     model = MaskCNN().to(device)
     checkpoint = torch.load(model_path, map_location=device)
-    model.load_state_dict(checkpoint)  # must match training definition
+    model.load_state_dict(checkpoint) 
     model.eval()
     return model
