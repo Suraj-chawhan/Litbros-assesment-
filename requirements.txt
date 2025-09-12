@@ -1,5 +1,6 @@
-Flask
-torch
-torchvision
-Pillow
-gdown
+gunicorn==21.2.0
+Flask==2.3.5
+torch==2.2.0
+torchvision==0.17.1
+Pillow==10.0.1
+gdown==4.7.1
