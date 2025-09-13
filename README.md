@@ -66,7 +66,7 @@ The training script will:
 - Extract the `.zip` file  
 - Create train/test DataLoaders  
 - Train the CNN model for 15 epochs  
-- Save the trained model as `saved_model.pth`  
+- Save the trained model as `mask_model.pth`  
 
 Run training:
 
@@ -75,7 +75,7 @@ cd model_train_code
 python train.py
 ```
 
-After training, `saved_model.pth` will be created in the project root.
+After training, `mask_model.pth` will be created in the project root.
 
 ---
 
@@ -97,7 +97,7 @@ http://127.0.0.1:5000/
 
 ## Example Workflow
 
-1. Train the model with `train.py` (saves `saved_model.pth`).  
+1. Train the model with `train.py` (saves `mask_model.pth`).  
 2. Run Flask app with `app.py` (loads the trained model).  
 3. Upload an image via the HTML form (`index.html`).  
 4. The model performs inference and displays the result in the browser.  
@@ -112,10 +112,9 @@ Example `requirements.txt`:
 flask
 torch
 torchvision
-pandas
-numpy
 Pillow
 kaggle
+gdown
 ```
 
 ---
