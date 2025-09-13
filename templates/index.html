@@ -76,35 +76,17 @@ img {
     <br>
     <input type="submit" value="Upload & Predict">
   </form>
-  <img id="uploaded-img" src="" alt="" style="display:none;">
-  <div id="result" class="result" style="display:none;">
-    <p><b>Prediction:</b> <span id="prediction-text"></span></p>
-    <p><b>Confidence:</b> <span id="confidence-text"></span></p>
+
+  {% if uploaded_img %}
+    <img src="{{ url_for('static', filename=uploaded_img) }}" alt="Uploaded Image">
+  {% endif %}
+
+  {% if prediction %}
+  <div class="result {% if prediction == 'Mask' %}mask{% else %}no-mask{% endif %}">
+    <p><b>Prediction:</b> {{ prediction }}</p>
+    <p><b>Confidence:</b> {{ confidence }}%</p>
   </div>
+  {% endif %}
 </div>
-<script>
-function showResult(prediction, confidence, imgSrc) {
-  const img = document.getElementById("uploaded-img");
-  const resultBox = document.getElementById("result");
-  const predictionText = document.getElementById("prediction-text");
-  const confidenceText = document.getElementById("confidence-text");
-
-  if (imgSrc) {
-    img.src = imgSrc;
-    img.style.display = "block";
-  }
-
-  predictionText.textContent = prediction;
-  confidenceText.textContent = confidence;
-
-  if (prediction.toLowerCase() === "mask") {
-    resultBox.className = "result mask";
-  } else {
-    resultBox.className = "result no-mask";
-  }
-
-  resultBox.style.display = "inline-block";
-}
-</script>
 </body>
 </html>
