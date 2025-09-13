@@ -1,5 +1,8 @@
 #import
 import torch
+from tqdm import tqdm
+import time
+import torch.optim as optim
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
 import torchvision.transforms as transforms
@@ -16,6 +19,9 @@ extract_path = "/content/data"
 with zipfile.ZipFile(zip_path, 'r') as zip_ref:
     zip_ref.extractall(extract_path)
 os.listdir(extract_path)
+
+
+
 """
 
 
@@ -42,9 +48,6 @@ test_loader = DataLoader(test_ds, batch_size=32, shuffle=False)
 #Model Creation
 
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 
 class MaskCNN(nn.Module):
     def __init__(self):
@@ -90,7 +93,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model=MaskCNN().to(device)
 
-import torch.optim as optim
 criterion = nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -103,8 +105,6 @@ def binary_accuracy(preds, labels):
 
 
 
-from tqdm import tqdm
-import time
 
 EPOCHS =15
 start_time = time.time()
@@ -162,3 +162,18 @@ for epoch in range(EPOCHS):
 
 end_time = time.time()
 print(f"\n Training completed in {(end_time - start_time)/60:.2f} minutes for {EPOCHS} epochs")
+
+
+
+
+
+#model save
+
+
+
+def save_model(model, path="mask_model.pth"):
+    torch.save(model.state_dict(), path)
+    print(f"Model saved at {path}")
+
+
+save_model(model)
