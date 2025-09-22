@@ -28,7 +28,7 @@ os.listdir(extract_path)
 transform = transforms.Compose([
     transforms.Resize((128,128)),
     transforms.ToTensor(),
-    transforms.Normalize([0.5,0.5,0.5],[0.5,0.5,0.5])
+   
 ])
 
 dataset = ImageFolder(root=f"{extract_path}/data", transform=transform)
